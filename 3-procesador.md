@@ -1,12 +1,12 @@
 # Limitar uso de procesador
 Limitar la cantidad de núcleos de CPU:
 ```
---cpus=<número de núcleos>
+--cpus="1.5"
 ```
 
 Asignar núcleos de CPU específicos:
 ```
---cpuset-cpus=<lista de núcleos>
+--cpuset-cpus="0-2"
 ```
 
 **¿Como saber el numero de procesadores virtuales que tiene una máquina?**
