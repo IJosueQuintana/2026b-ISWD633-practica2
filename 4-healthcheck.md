@@ -6,7 +6,7 @@ Un Healthcheck consta de un comando que se ejecuta periódicamente dentro del co
 ## Configuración de un Healthcheck
 ### Healthcheck command
 ```
---health-cmd="<comando> || exit 1"
+--health-cmd="wget -q -O /dev/null http://localhost/ || exit 1"
 ```
 Define el comando que se ejecutará para verificar el estado del contenedor. Este comando depende del tipo de aplicación que se está ejecutando en el contenedor y de la mejor manera de verificar su estado de salud. 
 
@@ -51,23 +51,23 @@ Establece el intervalo entre las ejecuciones del comando de verificación de est
 
 - Ajuste según las necesidades: El intervalo puede variar según la aplicación y su criticidad. Aplicaciones críticas pueden requerir intervalos más cortos para detectar problemas rápidamente, mientras que aplicaciones menos críticas pueden funcionar bien con intervalos más largos para reducir la carga en el sistema.
 ```
- --health-interval = <valor><unidad>
+ --health-interval = 3s
 ```
 
 ### Timeout
 Define el tiempo máximo que Docker esperará para que el comando de verificación de estado termine. Si el comando no termina dentro de este tiempo, se considera que ha fallado. El valor se especifica en segundos o en formato de duración.
 ```
---health-timeout=<valor><unidad>
+--health-timeout=10s
 ```
 ### Retries
 Especifica el número de intentos fallidos consecutivos que Docker permitirá antes de marcar el contenedor como no saludable (unhealthy).
 ```
---health-retries=<valor>
+--health-retries=3
 ```
 ### Start period
 Define un período de gracia inicial durante el cual los fallos del Healthcheck no cuentan como intentos fallidos. Esto puede ser útil para dar tiempo al servicio dentro del contenedor a que se inicie completamente antes de comenzar las verificaciones de estado. El valor se especifica en segundos s o en otra unidad similar.
 ```
---health-start-period=<valor><unidad>
+--health-start-period=5s
 ```
 
 ### Ejemplo
