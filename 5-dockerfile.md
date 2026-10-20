@@ -53,17 +53,29 @@ docker build -t <nombre imagen>:<tag> .
 ### Ejecutar el archivo Dockerfile y construir una imagen en la versión 1.0
 No olvides verificar en qué directorio se encuentra el archivo Dockerfile
 ```
-
+docker build -t apache-ces:1.0 .
 ```
 
 **¿Cuántos pasos se han ejecutado?**
-# RESPONDER 
+Durante la construcción de la imagen `apache-ces:1.0`, Docker BuildKit completó correctamente 10 de 10 operaciones, de las cuales 5 corresponden a pasos numerados de construcción de la imagen.
+
+Se utilizó una instrucción adicional para configurar los repositorios históricos de CentOS 7, debido a que los repositorios originales ya no estaban disponibles. La construcción finalizó correctamente en 164,2 segundos.
 
 ### Inspeccionar la imagen creada
-# COMPLETAR CON UNA CAPTURA
+<img width="955" height="987" alt="image" src="https://github.com/user-attachments/assets/1c42e441-f13b-44bb-93c1-2e2c58934e7a" />
+
 
 **Modificar el archivo index.html para incluir su nombre y luego crear una nueva versión de la imagen anterior**
 **¿Cuántos pasos se han ejecutado? ¿Observa algo diferente en la creación de la imagen**
+Durante la construcción de la imagen `apache-ces:1.0`, Docker BuildKit completó 10 de 10 operaciones, incluyendo 5 pasos numerados correspondientes a la construcción de la imagen.
+
+Inicialmente, se presentó un error al actualizar CentOS 7 debido a que sus repositorios originales ya no estaban disponibles. Para solucionarlo, se agregó una instrucción al Dockerfile que permite utilizar los repositorios históricos de CentOS 7.
+
+Después de realizar esta modificación, la imagen se construyó correctamente en 164,2 segundos.
+
+Al construir posteriormente la versión 2.0, se observó que Docker reutilizó las capas almacenadas en caché, reduciendo el tiempo de construcción a 1,5 segundos. Esto demuestra que Docker evita ejecutar nuevamente instrucciones cuyo contenido no ha cambiado.
+
+
 
 ## Mecanismo de caché
 Docker usa un mecanismo de caché cuando crea imágenes para acelerar el proceso de construcción y evitar la repetición de pasos que no han cambiado. Cada instrucción en un Dockerfile crea una capa en la imagen final. Docker intenta reutilizar las capas de una construcción anterior si no han cambiado, lo que reduce significativamente el tiempo de construcción.
@@ -75,14 +87,27 @@ Docker usa un mecanismo de caché cuando crea imágenes para acelerar el proceso
 
 ### Crear un contenedor a partir de las imagen creada, mapear todos los puertos
 ```
-
+docker run -d --name server-apache -P apache-ces:2.0
 ```
 
 ### ¿Con que puerto host se está realizando el mapeo?
-# COMPLETAR CON LA RESPUESTA
+```
+docker port server-apache
+```
+El puerto del host asignado automáticamente por Docker fue el 32771, que se encuentra mapeado al puerto 80/TCP del contenedor Apache.
+
+Esto se verificó mediante el comando docker port server-apache, obteniendo el resultado:
+
+80/tcp -> 0.0.0.0:32771
+
+El parámetro -P permite publicar automáticamente los puertos declarados mediante EXPOSE en el Dockerfile.
 
 **¿Qué es una imagen huérfana?**
-# COMPLETAR CON LA RESPUESTA
+Una imagen huérfana (*dangling image*) es una imagen Docker que no tiene una etiqueta de nombre y versión asociada. Generalmente aparece cuando se reconstruyen imágenes y sus versiones anteriores dejan de estar referenciadas por una etiqueta.
+
+Estas imágenes pueden ocupar espacio de almacenamiento y se pueden identificar mediante el comando `docker images -f "dangling=true"`.
+
+Para eliminar imágenes huérfanas que no estén siendo utilizadas por contenedores, se puede utilizar `docker image prune`.
 
 ### Identificar imágenes huérfanas
 ```
